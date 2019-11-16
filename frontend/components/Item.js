@@ -1,10 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
 import Link from 'next/link';
-import Title from './styles/Title';
+import PropTypes from 'prop-types';
+import React from 'react';
+
+import formatMoney from '../lib/formatMoney';
 import ItemStyles from './styles/ItemStyles';
 import PriceTag from './styles/PriceTag';
-import formatMoney from '../lib/formatMoney';
+import Title from './styles/Title';
+
 class Item extends React.Component {
   static propTypes = {
     item: PropTypes.object.isRequired,

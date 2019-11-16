@@ -1,7 +1,8 @@
-import React from 'react';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
+import React from 'react';
 import styled from 'styled-components';
+
 import Item from './Item';
 
 const ALL_ITEMS_QUERY = gql`
@@ -52,3 +53,4 @@ class Items extends React.Component {
 }
 
 export default Items;
+export { ALL_ITEMS_QUERY };
