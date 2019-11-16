@@ -16,4 +16,5 @@ function createClient({ headers }) {
   });
 }
 
+//we export withApollo and give it a function to create a client
 export default withApollo(createClient);
