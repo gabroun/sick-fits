@@ -44,7 +44,6 @@ class CreateItem extends React.Component {
   };
 
   uploadFile = async e => {
-    console.log('upload file');
     const files = e.target.files;
     const data = new FormData();
     data.append('file', files[0]);
