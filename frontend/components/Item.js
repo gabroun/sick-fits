@@ -2,11 +2,11 @@ import Link from 'next/link';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import DeleteItem from './DeleteItem'
 import formatMoney from '../lib/formatMoney';
 import ItemStyles from './styles/ItemStyles';
 import PriceTag from './styles/PriceTag';
 import Title from './styles/Title';
-import DeleteItem from './DeleteItem'
 
 class Item extends React.Component {
   static propTypes = {
