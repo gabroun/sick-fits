@@ -26,7 +26,7 @@ const mutations = {
         const where = {id: args.id}
 
         // find the item
-        const item = await ctx.db.query .item({where}, `{id, title}`)
+        const item = await ctx.db.query.item({where}, `{id, title}`)
         // check if they own the item or have permission
         // todo
         // delete it
