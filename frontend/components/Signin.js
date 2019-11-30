@@ -1,16 +1,14 @@
-import React from 'react';
 import { Mutation } from 'react-apollo';
-import Form from './styles/Form';
-import Error from './ErrorMessage';
 import gql from 'graphql-tag';
+import React from 'react';
 
-const SIGNUP_MUTATION = gql`
-  mutation SIGNUP_MUTATION(
-    $email: String!
-    $password: String!
-    $name: String!
-  ) {
-    signup(name: $name, email: $email, password: $password) {
+import { CURRENT_USER_QUERY } from './User';
+import Error from './ErrorMessage';
+import Form from './styles/Form';
+
+const SIGNIN_MUTATION = gql`
+  mutation SIGNIN_MUTATION($email: String!, $password: String!) {
+    signin(email: $email, password: $password) {
       id
       email
       name
@@ -28,14 +26,18 @@ class Signin extends React.Component {
   };
   render() {
     return (
-      <Mutation mutation={SIGNUP_MUTATION} variables={this.state}>
-        {(signup, { error, loading }) => {
+      <Mutation
+        mutation={SIGNIN_MUTATION}
+        variables={this.state}
+        refetchQueries={[{ query: CURRENT_USER_QUERY }]}
+      >
+        {(signin, { error, loading }) => {
           return (
             <Form
               method="post"
               onSubmit={async e => {
                 e.preventDefault();
-                const res = await signup();
+                const res = await signin();
                 this.setState({ email: '', password: '' });
               }}
             >
