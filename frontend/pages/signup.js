@@ -53,7 +53,7 @@ const StyledContainer = styled.div`
 
   .form-signup,
   .form-signin {
-    opacity: 0;
+    display: none;
     transition: all 0.5s ease;
     &.active {
       transition: opacity 0.5s ease, transform 0.5s ease,
@@ -61,7 +61,7 @@ const StyledContainer = styled.div`
       position: absolute;
       top: 0;
       width: 100%;
-      opacity: 1;
+      display: block;
     }
   }
 `;

@@ -6,6 +6,11 @@ const mutations = {
     const item = await ctx.db.mutation.createItem(
       {
         data: {
+          user: {
+            connect: {
+              id: ctx.request.userId
+            }
+          },
           ...args
         }
       },
@@ -63,6 +68,64 @@ const mutations = {
     });
 
     return user;
+  },
+  async signin(parent, { email, password }, ctx, info) {
+    const user = await ctx.db.query.user({ where: { email } });
+    if (!user) {
+      throw new Error(`No such user found for email ${email}`);
+    }
+
+    const valid = await bcrypt.compare(password, user.password);
+    if (!valid) {
+      throw new Error("Invalid password");
+    }
+
+    const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
+    ctx.response.cookie("token", token, {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 * 365 // 1 year cookie
+    });
+
+    return user;
+  },
+  signout(parent, args, ctx, info) {
+    ctx.response.clearCookie("token");
+    return {
+      message: "Goodbye"
+    };
+  },
+  async addToCart(parent, args, ctx, info) {
+    // check if they are signed in
+    const { userId } = ctx.request;
+    if (!userId) {
+      throw new Error("You must be signed in");
+    }
+    // query the user current cart
+    const [existingCartItem] = await ctx.db.query.cartItems({
+      where: {
+        user: { id: userId },
+        item: { id: args.id }
+      }
+    });
+    // check if the item is already in the cart and increment by 1
+    if (existingCartItem) {
+      console.log("this item already in the cart");
+      return ctx.db.mutation.updateCartItem({
+        where: { id: existingCartItem.id },
+        data: { quantity: existingCartItem.quantity + 1 }
+      });
+    }
+    // if not create a fresh cart item for the user
+    return ctx.db.mutation.createCartItem({
+      data: {
+        user: {
+          connect: { id: userId }
+        },
+        item: {
+          connect: { id: args.id }
+        }
+      }
+    });
   }
 };
 
