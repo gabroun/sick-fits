@@ -6,6 +6,11 @@ const mutations = {
     const item = await ctx.db.mutation.createItem(
       {
         data: {
+          user: {
+            connect: {
+              id: ctx.request.userId
+            }
+          },
           ...args
         }
       },
@@ -88,6 +93,39 @@ const mutations = {
     return {
       message: "Goodbye"
     };
+  },
+  async addToCart(parent, args, ctx, info) {
+    // check if they are signed in
+    const { userId } = ctx.request;
+    if (!userId) {
+      throw new Error("You must be signed in");
+    }
+    // query the user current cart
+    const [existingCartItem] = await ctx.db.query.cartItems({
+      where: {
+        user: { id: userId },
+        item: { id: args.id }
+      }
+    });
+    // check if the item is already in the cart and increment by 1
+    if (existingCartItem) {
+      console.log("this item already in the cart");
+      return ctx.db.mutation.updateCartItem({
+        where: { id: existingCartItem.id },
+        data: { quantity: existingCartItem.quantity + 1 }
+      });
+    }
+    // if not create a fresh cart item for the user
+    return ctx.db.mutation.createCartItem({
+      data: {
+        user: {
+          connect: { id: userId }
+        },
+        item: {
+          connect: { id: args.id }
+        }
+      }
+    });
   }
 };
 

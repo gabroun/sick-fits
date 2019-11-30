@@ -2,12 +2,12 @@ import Link from 'next/link';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import DeleteItem from './DeleteItem'
+import DeleteItem from './DeleteItem';
 import formatMoney from '../lib/formatMoney';
 import ItemStyles from './styles/ItemStyles';
 import PriceTag from './styles/PriceTag';
 import Title from './styles/Title';
-
+import AddToCart from './AddToCart';
 class Item extends React.Component {
   static propTypes = {
     item: PropTypes.object.isRequired,
@@ -39,7 +39,7 @@ class Item extends React.Component {
           >
             <a>Edit ✏️</a>
           </Link>
-          <button>Add To Cart</button>
+          <AddToCart id={item.id} />
           <DeleteItem id={item.id}>Delete Item</DeleteItem>
         </div>
       </ItemStyles>
